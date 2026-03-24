@@ -1,0 +1,21 @@
+customer_id,name,phone,plan_type,start_date,end_date,payment_status,subscription_status,preferences,delivery_address,delivery_zone,created_at,classification_bucket
+C001,Priya Sharma,919876543210,Weekly Standard,2026-03-01,2026-04-01,paid,active,Vegan,"Flat 12B, Bandra West, Mumbai",Zone A,2026-03-01,Active
+C002,Rahul Mehta,919823456789,Monthly Premium,2026-02-15,2026-03-15,unpaid,expired,High-Protein,"302, Andheri East, Mumbai",Zone B,2026-02-15,Expired
+C003,Ananya Patel,919712345678,Daily Lite,2026-03-20,2026-04-20,paid,active,Jain,"Villa 5, Juhu, Mumbai",Zone A,2026-03-20,New Customer
+C004,Karan Kapoor,919634567890,Weekly Standard,2026-03-22,2026-03-26,paid,active,Keto,"45, Powai, Mumbai",Zone C,2026-03-22,Renewal Due - 3 Days
+C005,Sneha Joshi,919556789012,Monthly Premium,2026-01-10,2026-02-10,paid,expired,Vegan,"8, Goregaon West, Mumbai",Zone B,2026-01-10,Dormant
+C006,Arjun Nair,919478901234,Daily Lite,2026-03-24,2026-04-24,paid,active,High-Protein,"12, Malad West, Mumbai",Zone B,2026-03-24,Active
+C007,Meera Iyer,919390123456,Weekly Standard,2026-03-01,2026-03-25,failed,active,Vegan,"3, Santacruz, Mumbai",Zone A,2026-03-01,Payment Pending
+C008,Dev Bose,919212345678,Monthly Premium,2026-03-24,2026-04-24,paid,active,Keto,"78, Vikhroli, Mumbai",Zone C,2026-03-24,New Customer
+C009,Riya Gupta,919134567890,Daily Lite,2026-02-01,2026-02-28,paid,expired,Jain,"Apt 9, Chembur, Mumbai",Zone C,2026-02-01,Reactivation
+C010,Amit Shah,919056789012,Weekly Standard,2026-03-10,2026-03-27,paid,active,High-Protein,"22, Thane West",Zone D,2026-03-10,Renewal Due - 3 Days
+C011,Kavya Reddy,918978901234,Monthly Premium,2026-03-24,2026-04-24,paid,active,Vegan,"5, Navi Mumbai",Zone D,2026-03-24,Engaged
+C012,Rohan Verma,918890123456,Daily Lite,2026-03-01,2026-03-15,paid,expired,Keto,"101, Kurla, Mumbai",Zone B,2026-03-01,Expired
+C013,Nisha Kulkarni,918712345678,Weekly Standard,2026-03-24,2026-04-24,paid,active,Vegan,"14, Dadar, Mumbai",Zone A,2026-03-24,New Customer
+C014,Vikram Singh,918634567890,Monthly Premium,2026-03-05,2026-04-05,paid,active,High-Protein,"67, Borivali, Mumbai",Zone B,2026-03-05,Active
+C015,Pooja Desai,918556789012,Daily Lite,2026-01-01,2026-01-31,paid,expired,Jain,"2, Vasai, Mumbai",Zone D,2026-01-01,Dormant
+C016,Suresh Kumar,918478901234,Weekly Standard,2026-03-24,2026-03-25,paid,active,Keto,"9, Kandivali, Mumbai",Zone B,2026-03-24,Renewal Due - 1 Day
+C017,Lakshmi Nair,918390123456,Monthly Premium,2026-03-20,2026-04-20,paid,active,Vegan,"33, Matunga, Mumbai",Zone A,2026-03-20,Active
+C018,Kartik Patel,918212345678,Daily Lite,2026-03-24,2026-04-24,paid,active,High-Protein,"55, Ghatkopar, Mumbai",Zone C,2026-03-24,New Customer
+C019,Divya Sharma,918134567890,Weekly Standard,2026-03-24,2026-03-26,unpaid,active,Jain,"7, Mulund, Mumbai",Zone C,2026-03-24,Payment Pending
+C020,Nikhil Joshi,918056789012,Monthly Premium,2026-03-21,2026-04-21,paid,active,Keto,"88, Bhandup, Mumbai",Zone C,2026-03-21,Engaged

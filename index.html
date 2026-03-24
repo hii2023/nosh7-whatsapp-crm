@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nosh7 — Fresh Salad Subscriptions, Mumbai</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  * { font-family: 'Inter', sans-serif; }
+  .gradient-hero { background: linear-gradient(135deg, #052e16 0%, #14532d 50%, #166534 100%); }
+  .card-hover { transition: all 0.25s ease; }
+  .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+  .plan-popular { position: relative; }
+  .plan-popular::before { content: '⭐ Most Popular'; position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: #16a34a; color: white; font-size: 11px; font-weight: 700; padding: 3px 14px; border-radius: 999px; white-space: nowrap; }
+  .fade-in { animation: fadeIn 0.6s ease both; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .wa-btn { background: #25d366; transition: all 0.2s; }
+  .wa-btn:hover { background: #128c4d; transform: scale(1.03); }
+  .section-tag { display: inline-block; background: #dcfce7; color: #166534; font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 999px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 12px; }
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body class="bg-white">
+
+<!-- Nav -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center text-white font-black text-base">N</div>
+      <span class="font-black text-gray-900 text-lg">Nosh7</span>
+    </div>
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+      <a href="#plans" class="hover:text-green-700">Plans</a>
+      <a href="#how" class="hover:text-green-700">How it works</a>
+      <a href="#menu" class="hover:text-green-700">Menu</a>
+      <a href="#reviews" class="hover:text-green-700">Reviews</a>
+      <a href="#faq" class="hover:text-green-700">FAQ</a>
+    </div>
+    <a href="#plans" class="wa-btn text-white text-sm font-bold px-5 py-2.5 rounded-xl flex items-center gap-2">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Order on WhatsApp
+    </a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="gradient-hero pt-32 pb-20 px-6 text-white min-h-screen flex items-center">
+  <div class="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center">
+    <div class="fade-in">
+      <div class="inline-flex items-center gap-2 bg-green-500/20 text-green-300 text-xs font-bold px-4 py-2 rounded-full mb-6 border border-green-500/30">
+        🥗 Mumbai's #1 Salad Subscription
+      </div>
+      <h1 class="text-5xl md:text-6xl font-black leading-tight mb-6">
+        Fresh Salads.<br/>
+        <span class="text-green-400">Delivered Daily.</span><br/>
+        Zero Effort.
+      </h1>
+      <p class="text-green-100 text-lg mb-8 leading-relaxed max-w-md">
+        Subscribe to Nosh7 and get chef-crafted salads delivered to your door every morning. Vegan, Keto, Jain, High-Protein — your way.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="#plans" class="bg-green-500 hover:bg-green-400 text-white font-bold px-7 py-3.5 rounded-xl text-base transition">View Plans →</a>
+        <a href="https://wa.me/919999999999?text=Hi%2C%20I%27d%20like%20to%20subscribe%20to%20Nosh7!" class="wa-btn text-white font-bold px-7 py-3.5 rounded-xl text-base flex items-center gap-2">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Chat with us
+        </a>
+      </div>
+      <div class="mt-8 flex items-center gap-6 text-sm text-green-200">
+        <div class="flex items-center gap-1.5">⭐⭐⭐⭐⭐ <span class="font-semibold text-white">4.8</span> rating</div>
+        <div>·</div>
+        <div>200+ happy subscribers</div>
+        <div>·</div>
+        <div>Mumbai-wide delivery</div>
+      </div>
+    </div>
+    <div class="hidden md:grid grid-cols-2 gap-4 fade-in">
+      <div class="bg-white/10 backdrop-blur rounded-2xl p-5 border border-white/20">
+        <div class="text-4xl mb-3">🥗</div>
+        <div class="font-bold text-white text-sm">Caesar Kale Bowl</div>
+        <div class="text-green-300 text-xs mt-1">Vegan · 320 kcal</div>
+        <div class="mt-2 text-green-400 text-xs font-semibold">Today's Special ✓</div>
+      </div>
+      <div class="bg-white/10 backdrop-blur rounded-2xl p-5 border border-white/20 mt-8">
+        <div class="text-4xl mb-3">💪</div>
+        <div class="font-bold text-white text-sm">Protein Power Bowl</div>
+        <div class="text-green-300 text-xs mt-1">High-Protein · 480 kcal</div>
+        <div class="mt-2 text-gray-400 text-xs">Tomorrow</div>
+      </div>
+      <div class="bg-white/10 backdrop-blur rounded-2xl p-5 border border-white/20">
+        <div class="text-4xl mb-3">🌿</div>
+        <div class="font-bold text-white text-sm">Jain Garden Salad</div>
+        <div class="text-green-300 text-xs mt-1">Jain · 280 kcal</div>
+        <div class="mt-2 text-gray-400 text-xs">Wed</div>
+      </div>
+      <div class="bg-white/10 backdrop-blur rounded-2xl p-5 border border-white/20 mt-8">
+        <div class="text-4xl mb-3">🥑</div>
+        <div class="font-bold text-white text-sm">Keto Avocado Bowl</div>
+        <div class="text-green-300 text-xs mt-1">Keto · 380 kcal</div>
+        <div class="mt-2 text-gray-400 text-xs">Thu</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="bg-green-600 py-8 px-6">
+  <div class="max-w-6xl mx-auto grid grid-cols-4 gap-4 text-center text-white">
+    <div><div class="text-3xl font-black">200+</div><div class="text-green-200 text-sm mt-1">Active Subscribers</div></div>
+    <div><div class="text-3xl font-black">4.8⭐</div><div class="text-green-200 text-sm mt-1">Average Rating</div></div>
+    <div><div class="text-3xl font-black">5000+</div><div class="text-green-200 text-sm mt-1">Bowls Delivered</div></div>
+    <div><div class="text-3xl font-black">0</div><div class="text-green-200 text-sm mt-1">Preservatives Used</div></div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section id="how" class="py-20 px-6 bg-gray-50">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="section-tag">How It Works</div>
+      <h2 class="text-4xl font-black text-gray-900">3 steps to healthier eating</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="card-hover bg-white rounded-2xl p-8 border border-gray-100 text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-5">💬</div>
+        <div class="text-xs font-bold text-green-600 mb-2">STEP 1</div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Message Us on WhatsApp</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Send "Hi" to our WhatsApp number. Our bot will walk you through plan selection and preferences in 2 minutes.</p>
+      </div>
+      <div class="card-hover bg-white rounded-2xl p-8 border border-gray-100 text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-5">✅</div>
+        <div class="text-xs font-bold text-green-600 mb-2">STEP 2</div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Choose Your Plan</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Pick Daily Lite, Weekly Standard, or Monthly Premium. Select your diet preference — Vegan, Keto, Jain, or High-Protein.</p>
+      </div>
+      <div class="card-hover bg-white rounded-2xl p-8 border border-gray-100 text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-5">🚀</div>
+        <div class="text-xs font-bold text-green-600 mb-2">STEP 3</div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Salads at Your Door</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Fresh salads arrive every morning. You'll get a WhatsApp message with today's bowl and delivery ETA. Skip a day anytime.</p>
+      </div>
+    </div>
+    <div class="text-center mt-10">
+      <div class="inline-flex items-center gap-2 bg-green-50 text-green-700 text-sm px-5 py-2.5 rounded-xl border border-green-200 font-medium">
+        💬 Self-service: Pause, skip, change address — all on WhatsApp. No app needed.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Plans -->
+<section id="plans" class="py-20 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="section-tag">Pricing Plans</div>
+      <h2 class="text-4xl font-black text-gray-900">Simple, transparent pricing</h2>
+      <p class="text-gray-500 mt-3">All plans include free delivery · Cancel anytime via WhatsApp</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6 items-start">
+      <div class="card-hover bg-white border-2 border-gray-200 rounded-2xl p-7">
+        <div class="text-2xl mb-4">🥗</div>
+        <h3 class="text-xl font-black text-gray-900 mb-1">Daily Lite</h3>
+        <p class="text-gray-500 text-sm mb-5">Perfect for trying Nosh7</p>
+        <div class="mb-6"><span class="text-4xl font-black text-gray-900">₹149</span><span class="text-gray-400 text-sm">/day</span></div>
+        <ul class="space-y-3 mb-7 text-sm text-gray-600">
+          <li class="flex items-center gap-2"><span class="text-green-500">✓</span> 1 salad bowl/day</li>
+          <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Choice of 4 diets</li>
+          <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Morning delivery</li>
+          <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Skip any day</li>
+          <li class="flex items-center gap-2 text-gray-400"><span>✗</span> Custom add-ons</li>
+        </ul>
+        <a href="https://wa.me/919999999999?text=I%20want%20Daily%20Lite%20plan" class="block wa-btn text-white font-bold text-center py-3 rounded-xl text-sm">Start Daily Lite →</a>
+      </div>
+
+      <div class="plan-popular card-hover bg-green-600 border-2 border-green-600 rounded-2xl p-7 text-white mt-4">
+        <div class="text-2xl mb-4">⚡</div>
+        <h3 class="text-xl font-black mb-1">Weekly Standard</h3>
+        <p class="text-green-200 text-sm mb-5">Best value for regulars</p>
+        <div class="mb-6"><span class="text-4xl font-black">₹899</span><span class="text-green-200 text-sm">/week</span></div>
+        <ul class="space-y-3 mb-7 text-sm text-green-100">
+          <li class="flex items-center gap-2"><span class="text-white">✓</span> 7 salad bowls</li>
+          <li class="flex items-center gap-2"><span class="text-white">✓</span> Choice of 4 diets</li>
+          <li class="flex items-center gap-2"><span class="text-white">✓</span> Priority morning delivery</li>
+          <li class="flex items-center gap-2"><span class="text-white">✓</span> Skip any day</li>
+          <li class="flex items-center gap-2"><span class="text-white">✓</span> 1 custom add-on/week</li>
+        </ul>
+        <a href="https://wa.me/919999999999?text=I%20want%20Weekly%20Standard%20plan" class="block bg-white text-green-700 font-bold text-center py-3 rounded-xl text-sm hover:bg-green-50 transition">Start Weekly Standard →</a>
+      </div>
+
+      <div class="card-hover bg-white border-2 border-gray-200 rounded-2xl p-7">
+        <div class="text-2xl mb-4">👑</div>
+        <h3 class="text-xl font-black text-gray-900 mb-1">Monthly Premium</h3>
+        <p class="text-gray-500 text-sm mb-5">Maximum savings & variety</p>
+        <div class="mb-6"><span class="text-4xl font-black text-gray-900">₹2,999</span><span class="text-gray-400 text-sm">/month</span></div>
+        <ul class="space-y-3 mb-7 text-sm text-gray-600">
+          <li class="flex items-center gap-2"><span class="text-green-500">✓</span> 30 salad bowls</li>
+          <li class="flex items-center gap-2"><span class="text-green-500">✓</span> All diet options + combos</li>
+          <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Early delivery slot</li>
+          <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Unlimited skips/pauses</li>
+          <li class="flex items-center gap-2"><span class="text-green-500">✓</span> Unlimited custom add-ons</li>
+        </ul>
+        <a href="https://wa.me/919999999999?text=I%20want%20Monthly%20Premium%20plan" class="block wa-btn text-white font-bold text-center py-3 rounded-xl text-sm">Start Monthly Premium →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Menu Highlights -->
+<section id="menu" class="py-20 px-6 bg-gray-50">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="section-tag">This Week's Menu</div>
+      <h2 class="text-4xl font-black text-gray-900">Fresh. Seasonal. Delicious.</h2>
+    </div>
+    <div class="grid md:grid-cols-4 gap-5">
+      <div class="card-hover bg-white rounded-2xl p-5 border border-gray-100">
+        <div class="text-4xl mb-4 text-center">🥗</div>
+        <div class="font-bold text-gray-900 text-sm mb-1">Caesar Kale Bowl</div>
+        <div class="text-xs text-gray-500 mb-2">Kale, quinoa, cherry tomatoes, tahini dressing</div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">Vegan</span>
+          <span class="text-xs text-gray-400">320 kcal</span>
+        </div>
+      </div>
+      <div class="card-hover bg-white rounded-2xl p-5 border border-gray-100">
+        <div class="text-4xl mb-4 text-center">💪</div>
+        <div class="font-bold text-gray-900 text-sm mb-1">Protein Power Bowl</div>
+        <div class="text-xs text-gray-500 mb-2">Grilled chicken, edamame, black beans, citrus dressing</div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">High-Protein</span>
+          <span class="text-xs text-gray-400">480 kcal</span>
+        </div>
+      </div>
+      <div class="card-hover bg-white rounded-2xl p-5 border border-gray-100">
+        <div class="text-4xl mb-4 text-center">🥑</div>
+        <div class="font-bold text-gray-900 text-sm mb-1">Keto Avocado Bowl</div>
+        <div class="text-xs text-gray-500 mb-2">Avocado, cucumber, feta, olive oil, mixed greens</div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium">Keto</span>
+          <span class="text-xs text-gray-400">380 kcal</span>
+        </div>
+      </div>
+      <div class="card-hover bg-white rounded-2xl p-5 border border-gray-100">
+        <div class="text-4xl mb-4 text-center">🌿</div>
+        <div class="font-bold text-gray-900 text-sm mb-1">Jain Garden Salad</div>
+        <div class="text-xs text-gray-500 mb-2">Cabbage, carrot, beetroot, no root veggies, lemon</div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-medium">Jain</span>
+          <span class="text-xs text-gray-400">280 kcal</span>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-8">
+      <a href="https://wa.me/919999999999?text=Can%20I%20see%20the%20full%20menu%3F" class="inline-flex items-center gap-2 text-sm font-bold text-green-700 hover:underline">View Full Weekly Menu on WhatsApp →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Reviews -->
+<section id="reviews" class="py-20 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <div class="section-tag">Customer Love</div>
+      <h2 class="text-4xl font-black text-gray-900">What our subscribers say</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="card-hover bg-gray-50 rounded-2xl p-6 border border-gray-100">
+        <div class="text-yellow-400 text-lg mb-3">⭐⭐⭐⭐⭐</div>
+        <p class="text-gray-700 text-sm leading-relaxed mb-5">"I've been on the Monthly Premium for 3 months. The quality is consistently fresh and the WhatsApp updates are so convenient — I know exactly when my salad arrives!"</p>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 bg-green-100 rounded-full flex items-center justify-center text-green-700 font-bold">P</div>
+          <div><div class="text-sm font-bold text-gray-900">Priya Sharma</div><div class="text-xs text-gray-500">Bandra West · Monthly Premium</div></div>
+        </div>
+      </div>
+      <div class="card-hover bg-gray-50 rounded-2xl p-6 border border-gray-100">
+        <div class="text-yellow-400 text-lg mb-3">⭐⭐⭐⭐⭐</div>
+        <p class="text-gray-700 text-sm leading-relaxed mb-5">"The Keto bowls are amazing. I skipped a day via WhatsApp in 10 seconds flat. Best subscription service I've tried in Mumbai by far. Highly recommend!"</p>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 bg-orange-100 rounded-full flex items-center justify-center text-orange-700 font-bold">K</div>
+          <div><div class="text-sm font-bold text-gray-900">Karan Kapoor</div><div class="text-xs text-gray-500">Powai · Weekly Standard</div></div>
+        </div>
+      </div>
+      <div class="card-hover bg-gray-50 rounded-2xl p-6 border border-gray-100">
+        <div class="text-yellow-400 text-lg mb-3">⭐⭐⭐⭐⭐</div>
+        <p class="text-gray-700 text-sm leading-relaxed mb-5">"As a Jain, finding fresh, tasty, delivered salads felt impossible. Nosh7 nailed it. The Jain Garden Salad is my absolute favourite. Never cancelling this!"</p>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 bg-purple-100 rounded-full flex items-center justify-center text-purple-700 font-bold">A</div>
+          <div><div class="text-sm font-bold text-gray-900">Ananya Patel</div><div class="text-xs text-gray-500">Juhu · Daily Lite</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="py-20 px-6 bg-gray-50">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-12">
+      <div class="section-tag">FAQ</div>
+      <h2 class="text-4xl font-black text-gray-900">Frequently asked questions</h2>
+    </div>
+    <div class="space-y-3" id="faqList"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="gradient-hero py-20 px-6 text-white text-center">
+  <div class="max-w-2xl mx-auto">
+    <div class="text-5xl mb-5">🥗</div>
+    <h2 class="text-4xl font-black mb-4">Ready to eat healthy?</h2>
+    <p class="text-green-200 text-lg mb-8">Join 200+ Mumbaikars who start every morning with Nosh7.</p>
+    <a href="https://wa.me/919999999999?text=Hi%2C%20I%27d%20like%20to%20subscribe%20to%20Nosh7!" class="inline-flex items-center gap-3 wa-btn text-white font-bold px-10 py-4 rounded-2xl text-lg">
+      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Start on WhatsApp — it's free to try
+    </a>
+    <div class="mt-4 text-green-300 text-sm">No app. No sign-up form. Just WhatsApp.</div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-400 py-10 px-6">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <div class="w-7 h-7 bg-green-600 rounded-lg flex items-center justify-center text-white font-black text-sm">N</div>
+      <span class="text-white font-bold">Nosh7</span>
+      <span class="text-gray-600 text-sm">· Mumbai's Salad Subscription</span>
+    </div>
+    <div class="flex items-center gap-5 text-sm">
+      <a href="#" class="hover:text-white transition">Privacy</a>
+      <a href="#" class="hover:text-white transition">Terms</a>
+      <a href="https://wa.me/919999999999" class="hover:text-white transition">Contact</a>
+    </div>
+    <div class="text-xs">© 2026 Nosh7. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+const faqs = [
+  {q:'How do I subscribe?',a:'Simply send "Hi" or "Subscribe" to our WhatsApp number. Our bot will guide you through plan selection, diet preferences, and address in under 2 minutes.'},
+  {q:'Can I skip a day?',a:'Yes! Just send "Skip tomorrow" on WhatsApp and we\'ll skip your next delivery. No charge for that day. You can do this anytime before 8 PM.'},
+  {q:'How do I pause my subscription?',a:'Send "Pause subscription" on WhatsApp and tell us how many days. We\'ll extend your end date automatically.'},
+  {q:'What areas do you deliver to?',a:'We currently deliver across Mumbai — Bandra, Andheri, Juhu, Powai, Thane, Navi Mumbai, and more. Ask our WhatsApp bot for your pin code.'},
+  {q:'Can I change my diet preference?',a:'Yes! Send "Change diet" on WhatsApp. Options are Vegan, Jain, Keto, and High-Protein. Changes apply from the next delivery.'},
+  {q:'What time does delivery happen?',a:'Deliveries are between 7:30–9:30 AM. You\'ll get a WhatsApp message at 8 AM with your bowl details and live ETA.'},
+  {q:'How do I pay?',a:'We use Razorpay — you\'ll receive a secure payment link on WhatsApp. UPI, credit/debit cards, and net banking all accepted.'},
+];
+
+document.getElementById('faqList').innerHTML = faqs.map((f,i) => `
+  <div class="bg-white border border-gray-100 rounded-xl overflow-hidden">
+    <button onclick="toggleFaq(${i})" class="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-semibold text-gray-900 hover:bg-gray-50 transition">
+      <span>${f.q}</span>
+      <span id="faq-icon-${i}" class="text-gray-400 font-bold text-lg transition">+</span>
+    </button>
+    <div id="faq-body-${i}" class="hidden px-5 pb-4 text-sm text-gray-600 leading-relaxed">${f.a}</div>
+  </div>`).join('');
+
+function toggleFaq(i) {
+  const body = document.getElementById('faq-body-'+i);
+  const icon = document.getElementById('faq-icon-'+i);
+  const open = body.classList.contains('hidden');
+  body.classList.toggle('hidden', !open);
+  icon.textContent = open ? '−' : '+';
+}
+</script>
+</body>
+</html>

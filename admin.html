@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nosh7 — Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { font-family: 'Inter', sans-serif; }
+  .sidebar-link { transition: all 0.2s; }
+  .sidebar-link.active { background: #16a34a; color: white; }
+  .sidebar-link:hover:not(.active) { background: #f0fdf4; color: #16a34a; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+  .flow-card { transition: all 0.2s; }
+  .flow-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .toggle { position: relative; display: inline-block; width: 44px; height: 24px; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 24px; }
+  .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+  input:checked + .slider { background-color: #16a34a; }
+  input:checked + .slider:before { transform: translateX(20px); }
+  .stat-card { background: white; border-radius: 12px; padding: 20px; border: 1px solid #e5e7eb; }
+  .progress-bar { height: 6px; border-radius: 3px; background: #e5e7eb; }
+  .progress-fill { height: 100%; border-radius: 3px; background: #16a34a; }
+  table { border-collapse: collapse; width: 100%; }
+  th { background: #f9fafb; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; padding: 10px 14px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+  td { padding: 12px 14px; border-bottom: 1px solid #f3f4f6; font-size: 13px; color: #374151; }
+  tr:hover td { background: #f9fafb; }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #f1f1f1; }
+  ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+  .notification { position: fixed; top: 20px; right: 20px; z-index: 9999; transform: translateX(200%); transition: transform 0.3s; }
+  .notification.show { transform: translateX(0); }
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen flex">
+
+<!-- Sidebar -->
+<aside class="w-64 bg-white border-r border-gray-200 flex flex-col min-h-screen fixed left-0 top-0 z-50">
+  <div class="p-5 border-b border-gray-100">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-green-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">N</div>
+      <div>
+        <div class="font-bold text-gray-900 text-sm">Nosh7</div>
+        <div class="text-xs text-gray-500">WhatsApp CRM</div>
+      </div>
+    </div>
+  </div>
+  <nav class="flex-1 p-3 space-y-1">
+    <button onclick="showTab('dashboard')" class="sidebar-link active w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      Dashboard
+    </button>
+    <button onclick="showTab('customers')" class="sidebar-link w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      Customers
+      <span class="ml-auto badge bg-green-100 text-green-700">20</span>
+    </button>
+    <button onclick="showTab('classification')" class="sidebar-link w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+      Classification
+    </button>
+    <button onclick="showTab('flows')" class="sidebar-link w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Automation Flows
+      <span class="ml-auto badge bg-green-100 text-green-700">11</span>
+    </button>
+    <button onclick="showTab('messages')" class="sidebar-link w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+      Message Logs
+    </button>
+    <button onclick="showTab('templates')" class="sidebar-link w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      Templates
+    </button>
+    <button onclick="showTab('reports')" class="sidebar-link w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      Reports
+    </button>
+    <button onclick="showTab('integrations')" class="sidebar-link w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+      Integrations
+    </button>
+    <button onclick="showTab('settings')" class="sidebar-link w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      Settings
+    </button>
+  </nav>
+  <div class="p-4 border-t border-gray-100">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-700 font-bold text-sm">A</div>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs font-semibold text-gray-900 truncate">Admin</div>
+        <div class="text-xs text-gray-500">Nosh7 Owner</div>
+      </div>
+      <div class="w-2 h-2 rounded-full bg-green-500"></div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="ml-64 flex-1 flex flex-col min-h-screen">
+  <!-- Top Bar -->
+  <header class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-40">
+    <div>
+      <h1 id="pageTitle" class="text-lg font-bold text-gray-900">Dashboard</h1>
+      <p class="text-xs text-gray-500">Last sync: Today 6:00 AM IST · <span class="text-green-600 font-medium">All systems operational</span></p>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="text-xs bg-green-50 text-green-700 px-3 py-1.5 rounded-full font-medium border border-green-200">
+        🟢 WhatsApp Connected
+      </div>
+      <button onclick="runClassification()" class="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-green-700 transition">
+        ▶ Run Classification
+      </button>
+      <button onclick="showNotification('Daily report sent to WhatsApp!', 'success')" class="text-xs bg-white border border-gray-200 text-gray-600 px-3 py-1.5 rounded-lg font-medium hover:bg-gray-50 transition">
+        📊 Send Report
+      </button>
+    </div>
+  </header>
+
+  <div class="flex-1 p-6">
+
+    <!-- DASHBOARD TAB -->
+    <div id="tab-dashboard" class="tab-content active">
+      <!-- KPI Row -->
+      <div class="grid grid-cols-4 gap-4 mb-6">
+        <div class="stat-card">
+          <div class="text-xs text-gray-500 mb-1">Active Subscribers</div>
+          <div class="text-3xl font-bold text-gray-900">12</div>
+          <div class="text-xs text-green-600 mt-1">↑ 3 new this week</div>
+          <div class="progress-bar mt-3"><div class="progress-fill" style="width:60%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="text-xs text-gray-500 mb-1">Renewals Due (3 days)</div>
+          <div class="text-3xl font-bold text-orange-600">3</div>
+          <div class="text-xs text-orange-500 mt-1">⚠ Action needed</div>
+          <div class="progress-bar mt-3"><div class="progress-fill" style="width:15%; background:#f97316"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="text-xs text-gray-500 mb-1">Payment Pending</div>
+          <div class="text-3xl font-bold text-red-600">2</div>
+          <div class="text-xs text-red-500 mt-1">↑ 1 new failure</div>
+          <div class="progress-bar mt-3"><div class="progress-fill" style="width:10%; background:#ef4444"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="text-xs text-gray-500 mb-1">Avg Feedback Score</div>
+          <div class="text-3xl font-bold text-green-600">4.3⭐</div>
+          <div class="text-xs text-green-600 mt-1">↑ +0.2 vs last week</div>
+          <div class="progress-bar mt-3"><div class="progress-fill" style="width:86%"></div></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-6 mb-6">
+        <!-- Chart -->
+        <div class="col-span-2 bg-white border border-gray-200 rounded-xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-gray-900">Subscriber Growth (Last 30 days)</h3>
+            <select class="text-xs border border-gray-200 rounded-lg px-2 py-1 text-gray-600">
+              <option>Last 30 days</option>
+              <option>Last 7 days</option>
+              <option>Last 90 days</option>
+            </select>
+          </div>
+          <canvas id="growthChart" height="120"></canvas>
+        </div>
+
+        <!-- Today's Buckets -->
+        <div class="bg-white border border-gray-200 rounded-xl p-5">
+          <h3 class="font-semibold text-gray-900 mb-4">Today's Classification</h3>
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span><span class="text-xs text-gray-600">Active</span></div>
+              <span class="text-xs font-bold text-gray-900">8</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block"></span><span class="text-xs text-gray-600">New Customer</span></div>
+              <span class="text-xs font-bold text-gray-900">4</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block"></span><span class="text-xs text-gray-600">Renewal Due</span></div>
+              <span class="text-xs font-bold text-gray-900">3</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span><span class="text-xs text-gray-600">Expired</span></div>
+              <span class="text-xs font-bold text-gray-900">3</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-yellow-500 inline-block"></span><span class="text-xs text-gray-600">Payment Pending</span></div>
+              <span class="text-xs font-bold text-gray-900">2</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span><span class="text-xs text-gray-600">Engaged</span></div>
+              <span class="text-xs font-bold text-gray-900">2</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-gray-400 inline-block"></span><span class="text-xs text-gray-600">Dormant</span></div>
+              <span class="text-xs font-bold text-gray-900">2</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500">
+            Classified at 6:00 AM IST · <button class="text-green-600 font-medium" onclick="runClassification()">Re-run</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity + Alerts -->
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white border border-gray-200 rounded-xl p-5">
+          <h3 class="font-semibold text-gray-900 mb-4">Recent Activity</h3>
+          <div class="space-y-3">
+            <div class="flex items-start gap-3 text-sm">
+              <div class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center text-xs">✅</div>
+              <div><span class="font-medium text-gray-900">Priya Sharma</span><span class="text-gray-500"> renewed Monthly Premium</span><div class="text-xs text-gray-400">2 hrs ago</div></div>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <div class="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center text-xs">👋</div>
+              <div><span class="font-medium text-gray-900">Dev Bose</span><span class="text-gray-500"> joined as new subscriber</span><div class="text-xs text-gray-400">4 hrs ago</div></div>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <div class="w-7 h-7 bg-red-100 rounded-full flex items-center justify-center text-xs">❌</div>
+              <div><span class="font-medium text-gray-900">Meera Iyer</span><span class="text-gray-500"> payment failed — retry sent</span><div class="text-xs text-gray-400">5 hrs ago</div></div>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <div class="w-7 h-7 bg-yellow-100 rounded-full flex items-center justify-center text-xs">⭐</div>
+              <div><span class="font-medium text-gray-900">Kavya Reddy</span><span class="text-gray-500"> rated 5 stars — Google review requested</span><div class="text-xs text-gray-400">6 hrs ago</div></div>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <div class="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center text-xs">🔔</div>
+              <div><span class="font-medium text-gray-900">Karan Kapoor</span><span class="text-gray-500"> renewal reminder sent (3 days)</span><div class="text-xs text-gray-400">8 hrs ago</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-xl p-5">
+          <h3 class="font-semibold text-gray-900 mb-4">🔴 Alerts & Escalations</h3>
+          <div class="space-y-3">
+            <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm">
+              <div class="font-medium text-red-800">Payment Failure — Meera Iyer</div>
+              <div class="text-red-600 text-xs mt-1">3rd retry failed. Manual follow-up needed.</div>
+              <button class="mt-2 text-xs bg-red-600 text-white px-3 py-1 rounded font-medium" onclick="showNotification('WhatsApp opened for Meera Iyer', 'info')">Message Now</button>
+            </div>
+            <div class="bg-orange-50 border border-orange-200 rounded-lg p-3 text-sm">
+              <div class="font-medium text-orange-800">Renewal Expiring Tomorrow — Suresh Kumar</div>
+              <div class="text-orange-600 text-xs mt-1">Final day-1 reminder scheduled for 10 AM.</div>
+              <button class="mt-2 text-xs bg-orange-600 text-white px-3 py-1 rounded font-medium" onclick="showNotification('Reminder pre-sent to Suresh Kumar!', 'success')">Send Now</button>
+            </div>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm">
+              <div class="font-medium text-yellow-800">Low Rating — Rohan Verma (2⭐)</div>
+              <div class="text-yellow-600 text-xs mt-1">Received 3 hrs ago. Needs resolution.</div>
+              <button class="mt-2 text-xs bg-yellow-600 text-white px-3 py-1 rounded font-medium" onclick="showNotification('Escalation noted for Rohan Verma', 'info')">Escalate</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOMERS TAB -->
+    <div id="tab-customers" class="tab-content">
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
+          <input type="text" placeholder="Search by name, phone, plan..." class="border border-gray-200 rounded-lg px-3 py-2 text-sm w-72 focus:outline-none focus:ring-2 focus:ring-green-500" oninput="filterCustomers(this.value)">
+          <select class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none" onchange="filterByStatus(this.value)">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="expired">Expired</option>
+            <option value="paused">Paused</option>
+          </select>
+          <select class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none" onchange="filterByPlan(this.value)">
+            <option value="">All Plans</option>
+            <option value="Daily Lite">Daily Lite</option>
+            <option value="Weekly Standard">Weekly Standard</option>
+            <option value="Monthly Premium">Monthly Premium</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="cursor-pointer text-xs bg-white border border-gray-200 text-gray-600 px-3 py-2 rounded-lg font-medium hover:bg-gray-50 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            Upload CSV
+            <input type="file" accept=".csv" class="hidden" onchange="uploadCSV(event)">
+          </label>
+          <button onclick="exportCSV()" class="text-xs bg-white border border-gray-200 text-gray-600 px-3 py-2 rounded-lg font-medium hover:bg-gray-50 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Export CSV
+          </button>
+          <button onclick="document.getElementById('addCustomerModal').classList.add('open')" class="text-xs bg-green-600 text-white px-3 py-2 rounded-lg font-medium hover:bg-green-700 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Add Customer
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div id="customerTableWrap" class="overflow-x-auto">
+          <table id="customerTable">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Plan</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Payment</th>
+                <th>Bucket</th>
+                <th>Preference</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="customerTbody"></tbody>
+          </table>
+        </div>
+        <div class="px-4 py-3 border-t border-gray-100 flex items-center justify-between">
+          <span class="text-xs text-gray-500" id="tableCount">Showing 20 customers</span>
+          <div class="flex items-center gap-2">
+            <button class="text-xs px-2 py-1 border border-gray-200 rounded text-gray-500 hover:bg-gray-50">← Prev</button>
+            <span class="text-xs px-2 py-1 bg-green-600 text-white rounded">1</span>
+            <button class="text-xs px-2 py-1 border border-gray-200 rounded text-gray-500 hover:bg-gray-50">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLASSIFICATION TAB -->
+    <div id="tab-classification" class="tab-content">
+      <div class="mb-5 flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-semibold text-gray-900">Daily Auto-Classification</h2>
+          <p class="text-xs text-gray-500 mt-0.5">Runs every day at 6:00 AM IST via cron job</p>
+        </div>
+        <button onclick="runClassification()" class="text-xs bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700">▶ Run Now</button>
+      </div>
+      <div class="grid grid-cols-3 gap-4" id="classificationBuckets"></div>
+    </div>
+
+    <!-- AUTOMATION FLOWS TAB -->
+    <div id="tab-flows" class="tab-content">
+      <div class="mb-5">
+        <h2 class="text-base font-semibold text-gray-900">Automation Flows</h2>
+        <p class="text-xs text-gray-500 mt-0.5">11 trigger-based flows · Toggle to enable/disable · Click to configure</p>
+      </div>
+      <div class="grid grid-cols-2 gap-4" id="flowsGrid"></div>
+    </div>
+
+    <!-- MESSAGE LOGS TAB -->
+    <div id="tab-messages" class="tab-content">
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <h2 class="text-base font-semibold text-gray-900">Message Logs</h2>
+          <p class="text-xs text-gray-500">All WhatsApp messages sent via automation</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <select class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none">
+            <option>All Flows</option>
+            <option>Renewal Flow</option>
+            <option>Onboarding</option>
+            <option>Payment Follow-up</option>
+            <option>Reactivation</option>
+          </select>
+          <button onclick="exportLogs()" class="text-xs bg-white border border-gray-200 text-gray-600 px-3 py-2 rounded-lg font-medium hover:bg-gray-50">Export Logs</button>
+        </div>
+      </div>
+      <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Customer</th>
+              <th>Flow</th>
+              <th>Message Preview</th>
+              <th>Status</th>
+              <th>Replied</th>
+            </tr>
+          </thead>
+          <tbody id="messageLogTbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TEMPLATES TAB -->
+    <div id="tab-templates" class="tab-content">
+      <div class="mb-5 flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-semibold text-gray-900">WhatsApp Templates</h2>
+          <p class="text-xs text-gray-500">HSM (pre-approved) and conversational templates</p>
+        </div>
+        <button onclick="document.getElementById('addTemplateModal').classList.add('open')" class="text-xs bg-green-600 text-white px-3 py-2 rounded-lg font-medium hover:bg-green-700">+ New Template</button>
+      </div>
+      <div class="grid grid-cols-2 gap-4" id="templatesGrid"></div>
+    </div>
+
+    <!-- REPORTS TAB -->
+    <div id="tab-reports" class="tab-content">
+      <div class="mb-5 flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-semibold text-gray-900">Daily Reports</h2>
+          <p class="text-xs text-gray-500">Sent to owner WhatsApp at 9:00 PM IST</p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="previewReport()" class="text-xs bg-white border border-gray-200 text-gray-600 px-3 py-2 rounded-lg font-medium hover:bg-gray-50">Preview Today's Report</button>
+          <button onclick="showNotification('Report sent to WhatsApp!', 'success')" class="text-xs bg-green-600 text-white px-3 py-2 rounded-lg font-medium hover:bg-green-700">Send Now</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white border border-gray-200 rounded-xl p-5">
+          <h3 class="font-semibold text-gray-900 mb-4">Today's Report Preview</h3>
+          <div id="reportPreview" class="font-mono text-sm bg-gray-900 text-green-400 rounded-xl p-5 whitespace-pre-wrap leading-6"></div>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-xl p-5">
+          <h3 class="font-semibold text-gray-900 mb-4">Report History</h3>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+              <span class="text-sm text-gray-700">Mar 23, 2026 — 9:00 PM</span>
+              <span class="badge bg-green-100 text-green-700">Sent ✓</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+              <span class="text-sm text-gray-700">Mar 22, 2026 — 9:00 PM</span>
+              <span class="badge bg-green-100 text-green-700">Sent ✓</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+              <span class="text-sm text-gray-700">Mar 21, 2026 — 9:00 PM</span>
+              <span class="badge bg-green-100 text-green-700">Sent ✓</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-gray-100">
+              <span class="text-sm text-gray-700">Mar 20, 2026 — 9:00 PM</span>
+              <span class="badge bg-green-100 text-green-700">Sent ✓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTEGRATIONS TAB -->
+    <div id="tab-integrations" class="tab-content">
+      <div class="mb-5">
+        <h2 class="text-base font-semibold text-gray-900">Integrations & Setup Guide</h2>
+        <p class="text-xs text-gray-500">Connect Nosh7 to the automation stack</p>
+      </div>
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="bg-white border-2 border-green-200 rounded-xl p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div class="font-semibold text-gray-900 text-sm">WhatsApp API</div>
+            <span class="badge bg-green-100 text-green-700">Connected</span>
+          </div>
+          <div class="text-xs text-gray-500 mb-3">Provider: AiSensy / Interakt</div>
+          <div class="space-y-2">
+            <div class="text-xs">
+              <div class="text-gray-500 mb-1">API Key</div>
+              <input type="password" value="aisensy_live_••••••••••" class="w-full border border-gray-200 rounded px-2 py-1.5 text-xs focus:outline-none">
+            </div>
+            <div class="text-xs">
+              <div class="text-gray-500 mb-1">Webhook URL</div>
+              <input type="text" value="https://nosh7.app/webhook/wa" class="w-full border border-gray-200 rounded px-2 py-1.5 text-xs focus:outline-none bg-gray-50">
+            </div>
+          </div>
+          <button onclick="showNotification('WhatsApp connection tested successfully!', 'success')" class="mt-3 w-full text-xs bg-green-600 text-white py-1.5 rounded font-medium hover:bg-green-700">Test Connection</button>
+        </div>
+        <div class="bg-white border-2 border-blue-200 rounded-xl p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div class="font-semibold text-gray-900 text-sm">Supabase DB</div>
+            <span class="badge bg-blue-100 text-blue-700">Connected</span>
+          </div>
+          <div class="text-xs text-gray-500 mb-3">PostgreSQL · ap-south-1 region</div>
+          <div class="space-y-2">
+            <div class="text-xs">
+              <div class="text-gray-500 mb-1">Project URL</div>
+              <input type="text" value="https://xxxxx.supabase.co" class="w-full border border-gray-200 rounded px-2 py-1.5 text-xs focus:outline-none">
+            </div>
+            <div class="text-xs">
+              <div class="text-gray-500 mb-1">Anon Key</div>
+              <input type="password" value="eyJhbGciOiJIUzI1NiIsIn••••" class="w-full border border-gray-200 rounded px-2 py-1.5 text-xs focus:outline-none">
+            </div>
+          </div>
+          <button onclick="showNotification('Supabase connection tested successfully!', 'success')" class="mt-3 w-full text-xs bg-blue-600 text-white py-1.5 rounded font-medium hover:bg-blue-700">Test Connection</button>
+        </div>
+        <div class="bg-white border-2 border-purple-200 rounded-xl p-4">
+          <div class="flex items-center justify-between mb-3">
+            <div class="font-semibold text-gray-900 text-sm">n8n Automation</div>
+            <span class="badge bg-purple-100 text-purple-700">Connected</span>
+          </div>
+          <div class="text-xs text-gray-500 mb-3">Self-hosted on Railway</div>
+          <div class="space-y-2">
+            <div class="text-xs">
+              <div class="text-gray-500 mb-1">n8n URL</div>
+              <input type="text" value="https://nosh7-n8n.railway.app" class="w-full border border-gray-200 rounded px-2 py-1.5 text-xs focus:outline-none">
+            </div>
+            <div class="text-xs">
+              <div class="text-gray-500 mb-1">API Key</div>
+              <input type="password" value="n8n_api_••••••••••••" class="w-full border border-gray-200 rounded px-2 py-1.5 text-xs focus:outline-none">
+            </div>
+          </div>
+          <button onclick="showNotification('n8n workflows synced!', 'success')" class="mt-3 w-full text-xs bg-purple-600 text-white py-1.5 rounded font-medium hover:bg-purple-700">Sync Workflows</button>
+        </div>
+      </div>
+
+      <!-- Step-by-step guide -->
+      <div class="bg-white border border-gray-200 rounded-xl p-5">
+        <h3 class="font-semibold text-gray-900 mb-4">📋 4-Week Implementation Guide</h3>
+        <div class="space-y-4" id="implementationGuide"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div id="tab-settings" class="tab-content">
+      <div class="mb-5">
+        <h2 class="text-base font-semibold text-gray-900">Settings</h2>
+        <p class="text-xs text-gray-500">Configure automation rules and business preferences</p>
+      </div>
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-white border border-gray-200 rounded-xl p-5 space-y-5">
+          <h3 class="font-semibold text-gray-900">Message Rules</h3>
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm text-gray-700 font-medium">Max messages per day</div>
+              <div class="text-xs text-gray-500">Per customer limit</div>
+            </div>
+            <select class="border border-gray-200 rounded px-2 py-1 text-sm">
+              <option>2</option><option>3</option><option>1</option>
+            </select>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm text-gray-700 font-medium">Classification Time</div>
+              <div class="text-xs text-gray-500">Daily cron job</div>
+            </div>
+            <input type="time" value="06:00" class="border border-gray-200 rounded px-2 py-1 text-sm">
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm text-gray-700 font-medium">Daily Report Time</div>
+              <div class="text-xs text-gray-500">Send to owner</div>
+            </div>
+            <input type="time" value="21:00" class="border border-gray-200 rounded px-2 py-1 text-sm">
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm text-gray-700 font-medium">Morning Update Time</div>
+              <div class="text-xs text-gray-500">Active customers</div>
+            </div>
+            <input type="time" value="08:00" class="border border-gray-200 rounded px-2 py-1 text-sm">
+          </div>
+          <button onclick="showNotification('Settings saved!', 'success')" class="w-full text-sm bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700">Save Settings</button>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-xl p-5 space-y-5">
+          <h3 class="font-semibold text-gray-900">Business Details</h3>
+          <div>
+            <label class="text-xs text-gray-500 mb-1 block">Business Name</label>
+            <input type="text" value="Nosh7" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+          </div>
+          <div>
+            <label class="text-xs text-gray-500 mb-1 block">Owner WhatsApp</label>
+            <input type="text" value="+91 98765 00000" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+          </div>
+          <div>
+            <label class="text-xs text-gray-500 mb-1 block">Win-back Offer %</label>
+            <input type="number" value="10" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+          </div>
+          <div>
+            <label class="text-xs text-gray-500 mb-1 block">Google Maps Review Link</label>
+            <input type="text" value="https://g.page/nosh7/review" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+          </div>
+          <div>
+            <label class="text-xs text-gray-500 mb-1 block">Razorpay Payment Link Base</label>
+            <input type="text" value="https://rzp.io/l/nosh7" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+          </div>
+          <button onclick="showNotification('Business details saved!', 'success')" class="w-full text-sm bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700">Save Details</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Add Customer Modal -->
+<div id="addCustomerModal" class="modal-overlay">
+  <div class="bg-white rounded-2xl p-6 w-full max-w-lg mx-4 max-h-screen overflow-y-auto">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="text-lg font-bold text-gray-900">Add New Customer</h2>
+      <button onclick="document.getElementById('addCustomerModal').classList.remove('open')" class="text-gray-400 hover:text-gray-600">✕</button>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div><label class="text-xs text-gray-500 mb-1 block">Full Name *</label><input type="text" placeholder="Priya Sharma" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"></div>
+      <div><label class="text-xs text-gray-500 mb-1 block">WhatsApp Number *</label><input type="text" placeholder="919876543210" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"></div>
+      <div><label class="text-xs text-gray-500 mb-1 block">Plan Type *</label>
+        <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none">
+          <option>Daily Lite</option><option>Weekly Standard</option><option>Monthly Premium</option>
+        </select>
+      </div>
+      <div><label class="text-xs text-gray-500 mb-1 block">Start Date *</label><input type="date" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none"></div>
+      <div><label class="text-xs text-gray-500 mb-1 block">End Date *</label><input type="date" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none"></div>
+      <div><label class="text-xs text-gray-500 mb-1 block">Diet Preference</label>
+        <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none">
+          <option>Vegan</option><option>Jain</option><option>Keto</option><option>High-Protein</option>
+        </select>
+      </div>
+      <div class="col-span-2"><label class="text-xs text-gray-500 mb-1 block">Delivery Address</label><input type="text" placeholder="Flat 12B, Bandra West, Mumbai" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none"></div>
+      <div><label class="text-xs text-gray-500 mb-1 block">Delivery Zone</label>
+        <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none">
+          <option>Zone A</option><option>Zone B</option><option>Zone C</option><option>Zone D</option>
+        </select>
+      </div>
+      <div><label class="text-xs text-gray-500 mb-1 block">Payment Status</label>
+        <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none">
+          <option>paid</option><option>unpaid</option><option>failed</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-5">
+      <button onclick="document.getElementById('addCustomerModal').classList.remove('open')" class="flex-1 border border-gray-200 text-gray-600 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50">Cancel</button>
+      <button onclick="addCustomer()" class="flex-1 bg-green-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-green-700">Add Customer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Template Modal -->
+<div id="addTemplateModal" class="modal-overlay">
+  <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="text-lg font-bold text-gray-900">New Template</h2>
+      <button onclick="document.getElementById('addTemplateModal').classList.remove('open')" class="text-gray-400 hover:text-gray-600">✕</button>
+    </div>
+    <div class="space-y-4">
+      <div><label class="text-xs text-gray-500 mb-1 block">Template Name</label><input type="text" placeholder="renewal_reminder_3d" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"></div>
+      <div><label class="text-xs text-gray-500 mb-1 block">Type</label>
+        <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none">
+          <option>HSM (Pre-approved)</option><option>Conversational (24hr)</option>
+        </select>
+      </div>
+      <div><label class="text-xs text-gray-500 mb-1 block">Flow</label>
+        <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none">
+          <option>Renewal Flow</option><option>Onboarding</option><option>Reactivation</option><option>Payment</option><option>Other</option>
+        </select>
+      </div>
+      <div><label class="text-xs text-gray-500 mb-1 block">Message Body (use {{Name}}, {{Plan}})</label>
+        <textarea rows="4" placeholder="Hi {{Name}}! 🥗 Your {{Plan}} plan ends in 3 days..." class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"></textarea>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-5">
+      <button onclick="document.getElementById('addTemplateModal').classList.remove('open')" class="flex-1 border border-gray-200 text-gray-600 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50">Cancel</button>
+      <button onclick="showNotification('Template saved! Pending Meta approval.', 'success'); document.getElementById(\'addTemplateModal\').classList.remove(\'open\')" class="flex-1 bg-green-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-green-700">Save Template</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notification Toast -->
+<div id="notification" class="notification">
+  <div id="notifContent" class="flex items-center gap-3 bg-white border border-gray-200 shadow-lg rounded-xl px-4 py-3 text-sm font-medium"></div>
+</div>
+
+<script>
+// ---- DATA ----
+const customers = [
+  {id:'C001',name:'Priya Sharma',phone:'919876543210',plan:'Weekly Standard',end:'2026-04-01',status:'active',payment:'paid',bucket:'Active',pref:'Vegan',zone:'Zone A'},
+  {id:'C002',name:'Rahul Mehta',phone:'919823456789',plan:'Monthly Premium',end:'2026-03-15',status:'expired',payment:'unpaid',bucket:'Expired',pref:'High-Protein',zone:'Zone B'},
+  {id:'C003',name:'Ananya Patel',phone:'919712345678',plan:'Daily Lite',end:'2026-04-20',status:'active',payment:'paid',bucket:'New Customer',pref:'Jain',zone:'Zone A'},
+  {id:'C004',name:'Karan Kapoor',phone:'919634567890',plan:'Weekly Standard',end:'2026-03-27',status:'active',payment:'paid',bucket:'Renewal Due - 3 Days',pref:'Keto',zone:'Zone C'},
+  {id:'C005',name:'Sneha Joshi',phone:'919556789012',plan:'Monthly Premium',end:'2026-02-10',status:'expired',payment:'paid',bucket:'Dormant',pref:'Vegan',zone:'Zone B'},
+  {id:'C006',name:'Arjun Nair',phone:'919478901234',plan:'Daily Lite',end:'2026-04-24',status:'active',payment:'paid',bucket:'Active',pref:'High-Protein',zone:'Zone B'},
+  {id:'C007',name:'Meera Iyer',phone:'919390123456',plan:'Weekly Standard',end:'2026-03-25',status:'active',payment:'failed',bucket:'Payment Pending',pref:'Vegan',zone:'Zone A'},
+  {id:'C008',name:'Dev Bose',phone:'919212345678',plan:'Monthly Premium',end:'2026-04-24',status:'active',payment:'paid',bucket:'New Customer',pref:'Keto',zone:'Zone C'},
+  {id:'C009',name:'Riya Gupta',phone:'919134567890',plan:'Daily Lite',end:'2026-02-28',status:'expired',payment:'paid',bucket:'Expired',pref:'Jain',zone:'Zone C'},
+  {id:'C010',name:'Amit Shah',phone:'919056789012',plan:'Weekly Standard',end:'2026-03-27',status:'active',payment:'paid',bucket:'Renewal Due - 3 Days',pref:'High-Protein',zone:'Zone D'},
+  {id:'C011',name:'Kavya Reddy',phone:'918978901234',plan:'Monthly Premium',end:'2026-04-24',status:'active',payment:'paid',bucket:'Engaged',pref:'Vegan',zone:'Zone D'},
+  {id:'C012',name:'Rohan Verma',phone:'918890123456',plan:'Daily Lite',end:'2026-03-15',status:'expired',payment:'paid',bucket:'Expired',pref:'Keto',zone:'Zone B'},
+  {id:'C013',name:'Nisha Kulkarni',phone:'918712345678',plan:'Weekly Standard',end:'2026-04-24',status:'active',payment:'paid',bucket:'New Customer',pref:'Vegan',zone:'Zone A'},
+  {id:'C014',name:'Vikram Singh',phone:'918634567890',plan:'Monthly Premium',end:'2026-04-05',status:'active',payment:'paid',bucket:'Active',pref:'High-Protein',zone:'Zone B'},
+  {id:'C015',name:'Pooja Desai',phone:'918556789012',plan:'Daily Lite',end:'2026-01-31',status:'expired',payment:'paid',bucket:'Dormant',pref:'Jain',zone:'Zone D'},
+  {id:'C016',name:'Suresh Kumar',phone:'918478901234',plan:'Weekly Standard',end:'2026-03-25',status:'active',payment:'paid',bucket:'Renewal Due - 1 Day',pref:'Keto',zone:'Zone B'},
+  {id:'C017',name:'Lakshmi Nair',phone:'918390123456',plan:'Monthly Premium',end:'2026-04-20',status:'active',payment:'paid',bucket:'Active',pref:'Vegan',zone:'Zone A'},
+  {id:'C018',name:'Kartik Patel',phone:'918212345678',plan:'Daily Lite',end:'2026-04-24',status:'active',payment:'paid',bucket:'New Customer',pref:'High-Protein',zone:'Zone C'},
+  {id:'C019',name:'Divya Sharma',phone:'918134567890',plan:'Weekly Standard',end:'2026-03-26',status:'active',payment:'unpaid',bucket:'Payment Pending',pref:'Jain',zone:'Zone C'},
+  {id:'C020',name:'Nikhil Joshi',phone:'918056789012',plan:'Monthly Premium',end:'2026-04-21',status:'active',payment:'paid',bucket:'Engaged',pref:'Keto',zone:'Zone C'},
+];
+
+const flows = [
+  {id:'A',name:'Lead Conversion',desc:'Triggered on new opt-in or "Hi/Hello" keywords',trigger:'WhatsApp opt-in / keyword',steps:5,enabled:true,sent:47,color:'blue'},
+  {id:'B',name:'Onboarding',desc:'Triggered on first payment confirmation',trigger:'Payment confirmed (new)',steps:3,enabled:true,sent:32,color:'green'},
+  {id:'C',name:'Daily Active Update',desc:'Morning salad + ETA update to all active subscribers',trigger:'8:00 AM daily',steps:1,enabled:true,sent:245,color:'green'},
+  {id:'D',name:'Renewal Reminders',desc:'3-day, 2-day, and 1-day renewal nudges',trigger:'end_date = today + 3/2/1',steps:3,enabled:true,sent:89,color:'orange'},
+  {id:'E',name:'Payment Follow-up',desc:'Failed/overdue payment reminders (max 3)',trigger:'payment_status = failed',steps:3,enabled:true,sent:18,color:'red'},
+  {id:'F',name:'Expired Reactivation',desc:'Win-back campaign over 30 days',trigger:'status = expired',steps:5,enabled:true,sent:61,color:'purple'},
+  {id:'G',name:'Salary Date Campaign',desc:'New month fresh start — 1st–5th only',trigger:'Date 1–5, expired + leads',steps:1,enabled:true,sent:23,color:'yellow'},
+  {id:'H',name:'Engagement & Education',desc:'Health tips, recipes, stories (Tue/Thu/Sat)',trigger:'Scheduled 3x/week',steps:1,enabled:false,sent:0,color:'teal'},
+  {id:'I',name:'Feedback Collection',desc:'Star rating on Day 3 and Day 10',trigger:'Day 3 and Day 10 of cycle',steps:2,enabled:true,sent:74,color:'yellow'},
+  {id:'J',name:'Google Review Request',desc:'Sent within 30 min of 4–5 star feedback',trigger:'Rating ≥ 4 stars',steps:1,enabled:true,sent:29,color:'green'},
+  {id:'K',name:'Lead Nurturing',desc:'Rich content sequence for cold leads',trigger:'Lead > 24hrs, no conversion',steps:4,enabled:false,sent:0,color:'indigo'},
+];
+
+const messageLogs = [
+  {time:'8:02 AM',customer:'Priya Sharma',flow:'Daily Active Update',preview:'Good morning Priya! 🌅 Today\'s bowl: Caesar Kale...',status:'read',replied:'No'},
+  {time:'8:05 AM',customer:'Karan Kapoor',flow:'Renewal Reminders',preview:'Hi Karan! 🥗 Your Weekly Standard plan ends in 3 days...',status:'delivered',replied:'Yes'},
+  {time:'8:08 AM',customer:'Meera Iyer',flow:'Payment Follow-up',preview:'Hi Meera, your payment for Weekly Standard is pending...',status:'read',replied:'No'},
+  {time:'8:10 AM',customer:'Dev Bose',flow:'Onboarding',preview:'Welcome to Nosh7, Dev! 🎉 Your first bowl arrives...',status:'read',replied:'Yes'},
+  {time:'9:32 AM',customer:'Kavya Reddy',flow:'Feedback Collection',preview:'Hey Kavya! How\'s your experience been so far?...',status:'read',replied:'Yes'},
+  {time:'9:35 AM',customer:'Kavya Reddy',flow:'Google Review',preview:'Thanks Kavya! 💚 You made our day. Would you mind...',status:'delivered',replied:'No'},
+  {time:'10:00 AM',customer:'Suresh Kumar',flow:'Renewal Reminders',preview:'⚠️ Suresh, your plan expires TOMORROW! Renew now...',status:'read',replied:'Yes'},
+  {time:'10:15 AM',customer:'Ananya Patel',flow:'Daily Active Update',preview:'Good morning Ananya! 🌅 Today\'s bowl: Protein Power...',status:'delivered',replied:'No'},
+];
+
+const templates = [
+  {name:'renewal_3d',type:'HSM',flow:'Renewal Flow',status:'Approved',body:'Hi {{Name}}! 🥗 Your {{Plan}} plan ends in 3 days.\nRenew now and keep your healthy streak going!\n👉 [Renew Here]'},
+  {name:'renewal_1d',type:'HSM',flow:'Renewal Flow',status:'Approved',body:'⚠️ {{Name}}, your {{Plan}} expires TOMORROW!\nDon\'t break your streak — renew in one tap.\n💳 [Pay Now] — takes 30 sec'},
+  {name:'payment_followup',type:'HSM',flow:'Payment Follow-up',status:'Approved',body:'Hi {{Name}}, your payment for {{Plan}} is pending.\nTap below to complete it and avoid a break in delivery.\n💳 [Pay Now]'},
+  {name:'reactivation_offer',type:'HSM',flow:'Reactivation',status:'Approved',body:'We miss you, {{Name}}! 🌿\nYour Nosh7 {{Plan}} spot is waiting. Get 10% off if you re-join today.\n🔁 [Restart My Plan]'},
+  {name:'daily_update',type:'Conversational',flow:'Daily Update',status:'Active',body:'Good morning {{Name}}! 🌅\nToday\'s bowl: [Salad Name] — packed with [key ingredient].\nDelivery by [ETA]. Enjoy! 🥑'},
+  {name:'feedback_request',type:'Conversational',flow:'Feedback',status:'Active',body:'Hey {{Name}}! How\'s your experience been so far?\nRate us: ⭐⭐⭐⭐⭐\n[1️⃣ Poor] [2️⃣ OK] [3️⃣ Good] [4️⃣ Great] [5️⃣ Loved it!]'},
+  {name:'onboarding_welcome',type:'HSM',flow:'Onboarding',status:'Approved',body:'Welcome to Nosh7, {{Name}}! 🎉\nYour {{Plan}} subscription is active.\nFirst delivery tomorrow at [time]. Reply HELP anytime. 🥗'},
+  {name:'google_review',type:'Conversational',flow:'Google Review',status:'Active',body:'Thanks {{Name}}! 💚 You made our day!\nWould you mind leaving us a quick Google review?\n🌟 [Leave Review]'},
+];
+
+const classificationData = [
+  {bucket:'Active',count:8,color:'green',desc:'Subscription running smoothly',customers:['Priya Sharma','Arjun Nair','Vikram Singh','Lakshmi Nair']},
+  {bucket:'New Customer',count:4,color:'blue',desc:'Joined ≤ 7 days ago',customers:['Ananya Patel','Dev Bose','Nisha Kulkarni','Kartik Patel']},
+  {bucket:'Renewal Due - 3 Days',count:2,color:'orange',desc:'end_date = today + 3',customers:['Karan Kapoor','Amit Shah']},
+  {bucket:'Renewal Due - 1 Day',count:1,color:'red',desc:'end_date = today + 1',customers:['Suresh Kumar']},
+  {bucket:'Expired',count:3,color:'gray',desc:'Plan has ended',customers:['Rahul Mehta','Riya Gupta','Rohan Verma']},
+  {bucket:'Dormant',count:2,color:'gray',desc:'Expired > 30 days, no response',customers:['Sneha Joshi','Pooja Desai']},
+  {bucket:'Payment Pending',count:2,color:'yellow',desc:'Payment failed or overdue',customers:['Meera Iyer','Divya Sharma']},
+  {bucket:'Engaged',count:2,color:'purple',desc:'Active + responding to messages',customers:['Kavya Reddy','Nikhil Joshi']},
+];
+
+const implementationSteps = [
+  {week:'Week 1',title:'Foundation Setup',color:'blue',tasks:[
+    {done:true,text:'Create Supabase project in ap-south-1 region'},
+    {done:true,text:'Run SQL schema migrations for all 5 tables'},
+    {done:true,text:'Register on AiSensy / Interakt, connect Meta Business'},
+    {done:false,text:'Submit 4 HSM templates for Meta approval (3–5 days)'},
+    {done:false,text:'Install n8n on Railway / Render'},
+    {done:false,text:'Import customer CSV into Supabase'},
+  ]},
+  {week:'Week 2',title:'Core Flows Live',color:'green',tasks:[
+    {done:false,text:'Build n8n cron for 6 AM daily classification'},
+    {done:false,text:'Set up Renewal Flow (D) — 3/2/1 day reminders'},
+    {done:false,text:'Set up Payment Follow-up Flow (E)'},
+    {done:false,text:'Set up Onboarding Flow (B)'},
+    {done:false,text:'Test end-to-end: renewal reminder → payment → active'},
+  ]},
+  {week:'Week 3',title:'Growth Flows',color:'purple',tasks:[
+    {done:false,text:'Build Lead Conversion Flow (A) with keyword triggers'},
+    {done:false,text:'Build Expired Reactivation Flow (F)'},
+    {done:false,text:'Set up Salary Date Campaign (G) — 1st of month'},
+    {done:false,text:'Integrate Claude Haiku for intent detection'},
+    {done:false,text:'Set up self-service commands (pause/skip/cancel)'},
+  ]},
+  {week:'Week 4',title:'Intelligence & Reporting',color:'orange',tasks:[
+    {done:false,text:'Set up Feedback Flow (I) with star rating buttons'},
+    {done:false,text:'Set up Google Review Flow (J)'},
+    {done:false,text:'Schedule Engagement content (H) 3x/week'},
+    {done:false,text:'Configure 9 PM daily report to owner WhatsApp'},
+    {done:false,text:'Full end-to-end QA across all 11 flows'},
+    {done:false,text:'Go live 🚀'},
+  ]},
+];
+
+// ---- RENDER ----
+function getBucketBadge(b) {
+  const map = {'Active':'bg-green-100 text-green-700','New Customer':'bg-blue-100 text-blue-700','Renewal Due - 3 Days':'bg-orange-100 text-orange-700','Renewal Due - 2 Days':'bg-orange-100 text-orange-700','Renewal Due - 1 Day':'bg-red-100 text-red-700','Expired':'bg-gray-100 text-gray-700','Dormant':'bg-gray-100 text-gray-500','Payment Pending':'bg-yellow-100 text-yellow-800','Engaged':'bg-purple-100 text-purple-700','At-Risk':'bg-red-100 text-red-700','Reactivation':'bg-indigo-100 text-indigo-700'};
+  return map[b] || 'bg-gray-100 text-gray-600';
+}
+function getStatusBadge(s) {
+  const map = {'active':'bg-green-100 text-green-700','expired':'bg-red-100 text-red-700','paused':'bg-yellow-100 text-yellow-800'};
+  return map[s] || 'bg-gray-100 text-gray-600';
+}
+function getPayBadge(s) {
+  const map = {'paid':'bg-green-100 text-green-700','unpaid':'bg-red-100 text-red-700','failed':'bg-red-100 text-red-700'};
+  return map[s] || 'bg-gray-100 text-gray-600';
+}
+
+function renderCustomers(list) {
+  const tbody = document.getElementById('customerTbody');
+  tbody.innerHTML = list.map(c => `
+    <tr>
+      <td><div class="font-medium text-gray-900">${c.name}</div><div class="text-xs text-gray-400">${c.id}</div></td>
+      <td class="text-gray-500">${c.phone}</td>
+      <td><span class="badge bg-blue-50 text-blue-700">${c.plan}</span></td>
+      <td>${c.end}</td>
+      <td><span class="badge ${getStatusBadge(c.status)}">${c.status}</span></td>
+      <td><span class="badge ${getPayBadge(c.payment)}">${c.payment}</span></td>
+      <td><span class="badge ${getBucketBadge(c.bucket)}">${c.bucket}</span></td>
+      <td>${c.pref}</td>
+      <td>
+        <div class="flex items-center gap-1">
+          <button onclick="showNotification('WhatsApp opened for ${c.name}', 'info')" class="text-xs text-green-600 hover:text-green-800 font-medium">WA</button>
+          <span class="text-gray-300">|</span>
+          <button onclick="showNotification('Edit modal coming soon', 'info')" class="text-xs text-blue-600 hover:text-blue-800 font-medium">Edit</button>
+        </div>
+      </td>
+    </tr>`).join('');
+  document.getElementById('tableCount').textContent = `Showing ${list.length} customers`;
+}
+
+function filterCustomers(q) {
+  const f = customers.filter(c => c.name.toLowerCase().includes(q.toLowerCase()) || c.phone.includes(q) || c.plan.toLowerCase().includes(q.toLowerCase()));
+  renderCustomers(f);
+}
+function filterByStatus(s) { renderCustomers(s ? customers.filter(c => c.status === s) : customers); }
+function filterByPlan(p) { renderCustomers(p ? customers.filter(c => c.plan === p) : customers); }
+
+function renderFlows() {
+  const colorMap = {blue:'bg-blue-50 border-blue-200',green:'bg-green-50 border-green-200',orange:'bg-orange-50 border-orange-200',red:'bg-red-50 border-red-200',purple:'bg-purple-50 border-purple-200',yellow:'bg-yellow-50 border-yellow-200',teal:'bg-teal-50 border-teal-200',indigo:'bg-indigo-50 border-indigo-200'};
+  const iconMap = {A:'🎯',B:'👋',C:'🌅',D:'🔄',E:'💳',F:'🔁',G:'💰',H:'📚',I:'⭐',J:'🌟',K:'🌱'};
+  document.getElementById('flowsGrid').innerHTML = flows.map(f => `
+    <div class="flow-card bg-white border border-gray-200 rounded-xl p-4">
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-lg ${colorMap[f.color]} border flex items-center justify-center text-lg">${iconMap[f.id]}</div>
+          <div>
+            <div class="font-semibold text-gray-900 text-sm">Flow ${f.id}: ${f.name}</div>
+            <div class="text-xs text-gray-500">${f.steps} step${f.steps>1?'s':''} · ${f.sent} sent</div>
+          </div>
+        </div>
+        <label class="toggle"><input type="checkbox" ${f.enabled?'checked':''} onchange="toggleFlow('${f.id}', this.checked)"><span class="slider"></span></label>
+      </div>
+      <div class="text-xs text-gray-500 mb-2">${f.desc}</div>
+      <div class="text-xs bg-gray-50 rounded px-2 py-1.5 text-gray-600"><span class="font-medium">Trigger:</span> ${f.trigger}</div>
+    </div>`).join('');
+}
+
+function renderClassification() {
+  const colorMap = {green:'bg-green-500',blue:'bg-blue-500',orange:'bg-orange-500',red:'bg-red-500',gray:'bg-gray-400',yellow:'bg-yellow-500',purple:'bg-purple-500'};
+  document.getElementById('classificationBuckets').innerHTML = classificationData.map(b => `
+    <div class="bg-white border border-gray-200 rounded-xl p-4">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full ${colorMap[b.color]} inline-block"></span>
+          <span class="font-semibold text-gray-900 text-sm">${b.bucket}</span>
+        </div>
+        <span class="text-2xl font-bold text-gray-900">${b.count}</span>
+      </div>
+      <div class="text-xs text-gray-500 mb-3">${b.desc}</div>
+      <div class="space-y-1">
+        ${b.customers.slice(0,3).map(n=>`<div class="text-xs text-gray-600 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-gray-300 inline-block"></span>${n}</div>`).join('')}
+        ${b.count > 3 ? `<div class="text-xs text-gray-400">+${b.count-3} more</div>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+function renderMessageLogs() {
+  document.getElementById('messageLogTbody').innerHTML = messageLogs.map(m => `
+    <tr>
+      <td class="text-gray-500 text-xs">${m.time}</td>
+      <td class="font-medium text-gray-900">${m.customer}</td>
+      <td><span class="badge bg-blue-50 text-blue-700">${m.flow}</span></td>
+      <td class="text-gray-500 max-w-xs truncate">${m.preview}</td>
+      <td><span class="badge ${m.status==='read'?'bg-green-100 text-green-700':'bg-blue-100 text-blue-700'}">${m.status}</span></td>
+      <td><span class="badge ${m.replied==='Yes'?'bg-purple-100 text-purple-700':'bg-gray-100 text-gray-500'}">${m.replied}</span></td>
+    </tr>`).join('');
+}
+
+function renderTemplates() {
+  document.getElementById('templatesGrid').innerHTML = templates.map(t => `
+    <div class="bg-white border border-gray-200 rounded-xl p-4">
+      <div class="flex items-start justify-between mb-2">
+        <div>
+          <div class="font-semibold text-gray-900 text-sm">${t.name}</div>
+          <div class="text-xs text-gray-500 mt-0.5">${t.flow}</div>
+        </div>
+        <div class="flex flex-col items-end gap-1">
+          <span class="badge ${t.type==='HSM'?'bg-blue-100 text-blue-700':'bg-green-100 text-green-700'}">${t.type}</span>
+          <span class="badge ${t.status==='Approved'||t.status==='Active'?'bg-green-100 text-green-700':'bg-yellow-100 text-yellow-700'}">${t.status}</span>
+        </div>
+      </div>
+      <div class="bg-gray-50 rounded-lg p-3 text-xs text-gray-700 whitespace-pre-wrap border border-gray-100">${t.body}</div>
+      <div class="flex gap-2 mt-3">
+        <button onclick="showNotification('Template copied!', 'success')" class="flex-1 text-xs border border-gray-200 text-gray-600 py-1.5 rounded font-medium hover:bg-gray-50">Copy</button>
+        <button onclick="showNotification('Preview sent to your WhatsApp!', 'info')" class="flex-1 text-xs bg-green-600 text-white py-1.5 rounded font-medium hover:bg-green-700">Test Send</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderImplementationGuide() {
+  const colorMap = {blue:'border-blue-400 bg-blue-50',green:'border-green-400 bg-green-50',purple:'border-purple-400 bg-purple-50',orange:'border-orange-400 bg-orange-50'};
+  document.getElementById('implementationGuide').innerHTML = implementationSteps.map(w => `
+    <div class="border-l-4 ${colorMap[w.color]} rounded-r-xl p-4">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">${w.week}</span>
+        <span class="font-semibold text-gray-900">${w.title}</span>
+      </div>
+      <div class="space-y-2">
+        ${w.tasks.map(t => `
+          <label class="flex items-start gap-2 cursor-pointer group">
+            <input type="checkbox" ${t.done?'checked':''} class="mt-0.5 rounded text-green-600" onchange="this.closest('label').querySelector('span').classList.toggle('line-through', this.checked)">
+            <span class="text-sm text-gray-700 ${t.done?'line-through text-gray-400':''}">${t.text}</span>
+          </label>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function previewReport() {
+  document.getElementById('reportPreview').textContent = `📊 NOSH7 DAILY REPORT — Mar 24, 2026
+
+🟢 Active subscribers: 12
+🔄 Renewals due tomorrow: 1 (Suresh Kumar)
+💳 Payments pending: 2
+🆕 New leads today: 1
+📦 Deliveries completed: 12
+⭐ Avg feedback score: 4.3
+🔁 Reactivations today: 0
+
+⚠️ Escalations:
+  • Meera Iyer — payment failed (3rd retry)
+  • Rohan Verma — 2-star rating received`;
+}
+
+// ---- ACTIONS ----
+function showTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  const tabNames = {dashboard:'Dashboard',customers:'Customers',classification:'Classification',flows:'Automation Flows',messages:'Message Logs',templates:'Templates',reports:'Reports',integrations:'Integrations',settings:'Settings'};
+  document.getElementById('pageTitle').textContent = tabNames[tab] || tab;
+  event.currentTarget.classList.add('active');
+}
+
+function runClassification() {
+  showNotification('Classification running... 20 customers processed!', 'success');
+}
+
+function addCustomer() {
+  document.getElementById('addCustomerModal').classList.remove('open');
+  showNotification('Customer added successfully!', 'success');
+}
+
+function exportCSV() {
+  const headers = ['customer_id','name','phone','plan_type','end_date','subscription_status','payment_status','classification_bucket','preferences','delivery_zone'];
+  const rows = customers.map(c => [c.id,c.name,c.phone,c.plan,c.end,c.status,c.payment,c.bucket,c.pref,c.zone]);
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'nosh7_customers_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click(); URL.revokeObjectURL(url);
+  showNotification('Customers exported to CSV!', 'success');
+}
+
+function exportLogs() {
+  showNotification('Message logs exported!', 'success');
+}
+
+function uploadCSV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  showNotification(`"${file.name}" uploaded — ${file.size} bytes. Processing...`, 'success');
+}
+
+function toggleFlow(id, enabled) {
+  const f = flows.find(f => f.id === id);
+  if (f) { f.enabled = enabled; showNotification(`Flow ${id}: ${f.name} ${enabled ? 'enabled' : 'disabled'}`, enabled ? 'success' : 'info'); }
+}
+
+function showNotification(msg, type) {
+  const el = document.getElementById('notification');
+  const content = document.getElementById('notifContent');
+  const icons = {success:'✅',info:'ℹ️',error:'❌'};
+  const colors = {success:'text-green-700 border-green-200',info:'text-blue-700 border-blue-200',error:'text-red-700 border-red-200'};
+  content.className = `flex items-center gap-3 bg-white border shadow-lg rounded-xl px-4 py-3 text-sm font-medium ${colors[type] || colors.info}`;
+  content.innerHTML = `<span>${icons[type] || '•'}</span><span>${msg}</span>`;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ---- CHART ----
+function initChart() {
+  const ctx = document.getElementById('growthChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Feb 22','Feb 25','Mar 1','Mar 5','Mar 10','Mar 15','Mar 18','Mar 21','Mar 24'],
+      datasets: [{
+        label: 'Active', data: [6,7,8,9,10,11,12,12,12],
+        borderColor: '#16a34a', backgroundColor: 'rgba(22,163,74,0.1)', tension: 0.4, fill: true
+      },{
+        label: 'Expired', data: [2,2,3,3,3,4,4,5,5],
+        borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)', tension: 0.4, fill: true
+      }]
+    },
+    options: {
+      plugins: { legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 12 } } },
+      scales: { y: { beginAtZero: true, grid: { color: '#f3f4f6' } }, x: { grid: { display: false } } },
+      elements: { point: { radius: 3 } }
+    }
+  });
+}
+
+// ---- INIT ----
+window.onload = () => {
+  renderCustomers(customers);
+  renderFlows();
+  renderClassification();
+  renderMessageLogs();
+  renderTemplates();
+  renderImplementationGuide();
+  previewReport();
+  setTimeout(initChart, 100);
+};
+</script>
+</body>
+</html>

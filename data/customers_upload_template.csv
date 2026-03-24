@@ -1,0 +1,6 @@
+customer_id,name,phone,plan_type,start_date,end_date,payment_status,subscription_status,preferences,delivery_address,delivery_zone,created_at
+C001,Priya Sharma,919876543210,Weekly Standard,2026-03-01,2026-03-31,paid,active,Vegan,"Flat 12B, Bandra West, Mumbai",Zone A,2026-03-01
+C002,Rahul Mehta,919823456789,Monthly Premium,2026-02-15,2026-03-15,unpaid,expired,High-Protein,"302, Andheri East, Mumbai",Zone B,2026-02-15
+C003,Ananya Patel,919712345678,Daily Lite,2026-03-20,2026-04-20,paid,active,Jain,"Villa 5, Juhu, Mumbai",Zone A,2026-03-20
+C004,Karan Kapoor,919634567890,Weekly Standard,2026-03-22,2026-04-22,paid,active,Keto,"45, Powai, Mumbai",Zone C,2026-03-22
+C005,Sneha Joshi,919556789012,Monthly Premium,2026-01-10,2026-02-10,paid,expired,Vegan,"8, Goregaon West, Mumbai",Zone B,2026-01-10

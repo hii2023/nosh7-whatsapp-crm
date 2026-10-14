@@ -3,7 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nosh7 — Fresh Salad Subscriptions, Mumbai</title>
+<title>Nosh7 | Fresh Salad Subscription in Mumbai, Delivered Daily</title>
+<meta name="description" content="Chef-crafted salads delivered to your door every morning across Mumbai. Vegan, Keto, Jain and High-Protein plans from ₹149/day. Order on WhatsApp.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#166534">
+<!-- TODO: uncomment and set your real domain, then add the same URL to og:url -->
+<!-- <link rel="canonical" href="https://YOUR-DOMAIN/"> -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nosh7">
+<meta property="og:locale" content="en_IN">
+<meta property="og:title" content="Nosh7 | Fresh Salad Subscription in Mumbai">
+<meta property="og:description" content="Chef-crafted salads delivered every morning across Mumbai. Vegan, Keto, Jain and High-Protein plans from ₹149/day.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nosh7 | Fresh Salad Subscription in Mumbai">
+<meta name="twitter:description" content="Chef-crafted salads delivered every morning across Mumbai. Plans from ₹149/day.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FoodEstablishment",
+  "name": "Nosh7",
+  "description": "Fresh salad subscription service delivering chef-crafted Vegan, Keto, Jain and High-Protein salads across Mumbai.",
+  "servesCuisine": "Salads",
+  "priceRange": "₹149 - ₹2,999",
+  "areaServed": {"@type": "City", "name": "Mumbai"},
+  "address": {"@type": "PostalAddress", "addressLocality": "Mumbai", "addressRegion": "Maharashtra", "addressCountry": "IN"},
+  "makesOffer": [
+    {"@type": "Offer", "name": "Daily Lite", "price": "149", "priceCurrency": "INR"},
+    {"@type": "Offer", "name": "Weekly Standard", "price": "899", "priceCurrency": "INR"},
+    {"@type": "Offer", "name": "Monthly Premium", "price": "2999", "priceCurrency": "INR"}
+  ]
+}
+</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -344,6 +374,15 @@ const faqs = [
   {q:'What time does delivery happen?',a:'Deliveries are between 7:30–9:30 AM. You\'ll get a WhatsApp message at 8 AM with your bowl details and live ETA.'},
   {q:'How do I pay?',a:'We use Razorpay — you\'ll receive a secure payment link on WhatsApp. UPI, credit/debit cards, and net banking all accepted.'},
 ];
+
+const faqLd = document.createElement('script');
+faqLd.type = 'application/ld+json';
+faqLd.textContent = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(f => ({'@type': 'Question', name: f.q, acceptedAnswer: {'@type': 'Answer', text: f.a}}))
+});
+document.head.appendChild(faqLd);
 
 document.getElementById('faqList').innerHTML = faqs.map((f,i) => `
   <div class="bg-white border border-gray-100 rounded-xl overflow-hidden">
